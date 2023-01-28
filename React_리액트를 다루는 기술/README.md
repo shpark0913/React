@@ -1,3 +1,88 @@
+# React Setting
+
+### react router dom 설치
+
+`npm install react-router-dom --save`
+
+### axios
+
+`npm install axios --save`
+
+### proxy 설치
+
+`npm install http-proxy-middleware --save`
+
+```jsx
+src/setupProxy.js
+const proxy = require('http-proxy-middleware')
+
+module.exports = function(app) {
+    app.use(
+        '/api',
+        proxy({
+            target: '<http://localhost:5000>',
+            changeOrigin: true,
+        })
+    )
+}
+```
+
+```jsx
+axios.get('/api/search/kill') 
+
+-> <http://홈페이지주소.com/api/search/kill> 에서 가져오라는 뜻 
+
+axios.get('api/search/kill') 
+
+-> <http://홈페이지주소.com/현재경로/api/search/kill> 에서 가져오라는 뜻
+```
+
+### redux 설치
+
+`npm install redux react-redux redux-promise redux-thunk --save`
+
+- redux-thunk
+  - “teaches” dispatch how to accept functions, by intercepting the function and calling it instead of passing it on to the reducers.
+- redux-promise
+  - “teaches” dispatch how to accept promises, by intercepting the promise and dispatching actions when the promise resolves or rejects.
+- 위의 역할을 하기에 redux-thunk와 redux-promise 없이 redux를 사용하면 error가 많을 수도!
+- `import { Provider } from 'react-redux';` 를 `index.js` 에
+
+```jsx
+// index.js
+import { Provider } from 'react-redux';
+import { applyMiddleware, createStore } from 'redux';
+import promiseMiddleware from 'redux-promise'
+import ReduxThunk from 'redux-thunk'
+import Reducer from './_reducers'
+
+const createStoreWithMiddleware = applyMiddleware(promiseMiddleware, ReduxThunk)(createStore)
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  <Provider
+    store = {createStoreWithMiddleware(Reducer,
+      window.__REDUX_DEVTOOLS_EXTIONSION__ &&
+      window.__REDUX_DEVTOOLS_EXTIONSION____()
+      )}
+  >
+    <App />
+  </Provider>
+);
+
+// _reducers/index.js
+import { combineReducers } from "redux";
+// import user from './user_reducer'
+
+const rootReducer = combineReducers({
+    // user,
+})
+
+export default rootReducer
+```
+
+
+
 # 변수와 상수
 
 - 변수와 상수는 특정 이름에 특정 값을 담을 때 사용
