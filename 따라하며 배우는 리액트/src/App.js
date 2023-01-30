@@ -1,4 +1,6 @@
 import React from "react";
+import NavBar from "./components/views/NavBar/NavBar";
+import Footer from "./components/views/Footer/Footer";
 
 import {
   BrowserRouter as Router,
@@ -15,6 +17,7 @@ import RegisterPage from "./components/views/RegisterPage/RegisterPage"
 function App() {
   return (
     <Router>
+      <NavBar></NavBar>
       <div>
         <Routes>
           <Route exact path="/" element={<LandingPage />}></Route>
@@ -22,6 +25,7 @@ function App() {
           <Route exact path="/register" element={<RegisterPage />}></Route>
         </Routes>
       </div>
+      <Footer></Footer>
     </Router>
   );
 }

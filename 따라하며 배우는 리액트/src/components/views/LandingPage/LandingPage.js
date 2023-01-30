@@ -1,22 +1,26 @@
 import React from 'react'
-// import { useEffect } from 'react'
-// import axios from 'axios'
 
 function LandingPage() {
 
-  // // setupProxy.js 참고
-  // useEffect(() => {
-  //   axios.get('/api/hello')
-  //   .then((response) => console.log(response.data))
-  // }, [])
-
 
   return (
-    <div style={{
-      display: 'flex', justifyContent: 'center', alignItems: 'center',
-      width: '100%', height: '100vh'
-    }}>
-      <h2>시작 페이지</h2>
+    <div>
+
+      <div>
+        <p>큐레이션🍌</p> 
+        {/* 현재 상영 중인 큐레이션 들어갈 것 */}
+      </div>
+
+      <div>
+        <p>요즘 뜨는 커미션 작가💰</p> 
+        {/* 요즘 뜨는 작가들이 들어갈 것 */}
+      </div>
+
+      <div>
+        <p>트렌딩🔥</p> 
+        {/* 요즘 트렌드인 작품들이 들어갈 것 */}
+      </div>
+      
     </div>
   )
 }

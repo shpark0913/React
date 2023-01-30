@@ -2,9 +2,15 @@ import React from 'react'
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { loginUser } from '../../../_actions/user_action'
+import { useParams, useLocation, useNavigate } from 'react-router-dom'
+import logo from '../../../assets/글씨_250.png'
 
-function LoginPage(props) {
+
+export default function LoginPage(props) {
   const dispatch = useDispatch()
+  const params = useParams()
+  const navigate = useNavigate()
+  const location = useLocation()
 
   const [Email, setEmail] = useState('')
   const [Password, setPassword] = useState('')
@@ -27,21 +33,24 @@ function LoginPage(props) {
 
     dispatch(loginUser(body))
       .then(response => {
-        if (response.payload.loginSuccess) {
-          props.history.push('/')
+        localStorage.setItem("token", response.payload.data.accessToken)
+          navigate("/")
+        })
+      .catch(error => {
+        let error_code = error.response.data.message
+        if (error_code === "Invalid ID") {
+          alert("잘못된 아이디입니다.")
+        } else if (error_code === "Invalid Password") {
+          alert("잘못된 패스워드입니다.")
         } else {
-          alert('Error')
+          alert("이메일 인증을 진행해주세요.")
         }
       })
-
-    
   }
-
   return (
-    <div style={{
-      display: 'flex', justifyContent: 'center', alignItems: 'center',
-      width: '100%', height: '100vh'
-    }}>
+    <div>
+
+      <img src={logo} alt="/" />
 
       <form style={{display: 'flex', flexDirection: 'column'}}
         onSubmit = {onSubmitHandler}>
@@ -49,12 +58,19 @@ function LoginPage(props) {
         <input type="email" value={Email} onChange = {onEmailHandler} />
         <label>Password</label>
         <input type="password" value={Password} onChange = {onPasswordHandler} />
+        <input type="checkbox" name="로그인 유지"/>
+        <label htmlFor="로그인 유지">로그인 유지</label>
+        <a href="https://i8a108.p.ssafy.io/api/users/find-pwd">비밀번호 찾기</a>
         <br />
-        <button>Login</button>
+        <button>로그인</button>
+        <button onClick={event => {
+          event.preventDefault()
+          navigate("/register")
+        }}>회원가입</button>
       </form>
+      <hr />
+      <p>소셜 로그인 구현할 위치</p>
       
     </div>
   )
 }
-
-export default LoginPage
