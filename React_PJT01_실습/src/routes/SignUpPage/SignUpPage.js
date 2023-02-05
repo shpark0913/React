@@ -3,16 +3,15 @@ import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import './SignUpPage.css'
 import logo from '../../assets/글씨_250.png'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import '../../components/commons/commons.css'
 import { 
   signUpUser,
-  check_email, 
-  check_email_code,
-  check_nickname } from '../../_actions/user_action'
+  check_email,
+  check_email_code } from '../../_actions/user_action'
 
 function SignUpPage(props) {
   
@@ -85,6 +84,7 @@ function SignUpPage(props) {
   const emailVerify = () => {
     SetVerifyMessage('인증번호 재발송')
     const emailValid = document.querySelector('#email')
+    console.log(emailValid);
     let body = {
       email: emailValid.value
     }
@@ -148,63 +148,84 @@ function SignUpPage(props) {
 
 
   return (
-    <div id="sign_up_container">
+    <div id="sign_up_container" style={{marginTop: '10%'}}>
       <img src={logo} alt="/" id="logo_img" />
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div>
-          <label htmlFor="nickname">닉네임</label> <br/>
-          <input id="nickname" name="nickname" placeholder="nickname" {...register('nickname')} />
-          {/* <button htmlFor="nickname" onClick={onCheckNickname}>중복확인</button> */}
-          <button id='yellow_button'>중복확인</button>
+      <form onSubmit={handleSubmit(onSubmit)} style={{width: '27%'}}>
+        <div style={{
+          marginTop: '50px',
+          width: '100%'
+          }}>
+          <div>
+            <label htmlFor="nickname">닉네임</label> <br/>
+          </div>
+          <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', marginTop: '8px'}}>
+            <input className='input_box' name="nickname" placeholder="nickname" {...register('nickname')} style={{width: '60%'}} />
+            {/* <button htmlFor="nickname" onClick={onCheckNickname}>중복확인</button> */}
+            <button className='yellow_button'>중복확인</button>
+          </div>
         </div>
 
-        <div>
-          <label htmlFor="email">이메일</label> <br/>
-          <input id="email" name="email" placeholder="email" {...register('email')} />
-          {errors.email && <p>{errors.email.message}</p>}
-          <button onClick={emailVerify} id="yellow_button">{verifyMessage}</button>
+        <div style={{
+          marginTop: '15px',
+          width: '100%'
+          }}>
+          <div>
+            <label htmlFor="email">이메일</label> <br/>
+          </div>
+          <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', marginTop: '8px'}}>
+            <input className='input_box' id="email" name="email" placeholder="email" {...register('email')} style={{width: '60%'}}/>
+            <button onClick={emailVerify} className='yellow_button'>{verifyMessage}</button>
+            {/* {errors.email && <p style={{width: '100%'}}>{errors.email.message}</p>} */}
+          </div>
         </div>
-        <div>
+        <div style={{
+          width: '100%',
+          fontSize: '13px'
+        }}>
           { emailValidMessage }
         </div>
 
-        <div>
-          <input id="verifycheck" type="text" placeholder='인증번호를 입력해주세요' />
-          <button onClick={VerifyCheck} id='yellow_button'>인증번호 확인</button>
+        <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', marginTop: '10px', width: '100%'}}>
+          <input className='input_box' type="text" placeholder='인증번호를 입력해주세요' style={{width: '60%'}}/>
+          <button onClick={VerifyCheck} className='yellow_button'>인증번호 확인</button>
         </div>
-        <div>
+        <div style={{fontSize: '10px'}}>
           { emailCodeValidMessage }
         </div>
 
-        <div>
-          <label htmlFor="password">비밀번호</label> <br/>
+        <div style={{marginTop: '15px', width: "100%"}}>
+          <label htmlFor="password" style={{marginTop: '15px'}}>비밀번호</label> <br/>
           <input
+            className='input_box'
             type="password"
             name="password"
             placeholder="password"
             {...register('password')}
+            style={{marginTop: '8px', width: '100%', boxSizing: 'border-box'}}
           />
         </div>
-        <div>
+        <div style={{width: "100%", boxSizing: 'border-box', fontSize: '10px'}}>
           {errors.password && <p>{errors.password.message}</p>}
         </div>
 
-        <div>
+        <div style={{marginTop: '15px'}}>
           <label htmlFor="passwordConfirm">비밀번호 확인</label> <br/>
           <input
+            className='input_box'
             type="password"
             name="passwordConfirm"
             placeholder="password"
             {...register('passwordConfirm')}
+            style={{marginTop: '8px', width: '100%', boxSizing: 'border-box'}}
           />
         </div>
-        <div>
+        <div style={{fontSize: '10px'}}>
           {errors.passwordConfirm && <p>{errors.passwordConfirm.message}</p>}
         </div>
 
         <div>
           {/* <input type="submit" vaule="회원가입하기" disabled={errors || watch()} /> */}
-          <button disabled={!emailCheck} id="yellow_button" style={{width: '100%'}} >회원가입</button>
+          <button disabled={!emailCheck} className='yellow_button' style={{width: '100%', marginTop: '15px'}} >회원가입</button>
           {/* <button disabled={!emailCheck || !nicknameCheck} >회원가입</button> */}
         </div>
       </form>
