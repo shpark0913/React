@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux'
 import { loginUser } from '../../_actions/user_action'
 import { useNavigate } from 'react-router-dom'
 import logo from '../../assets/글씨_250.png'
-
+import axios from 'axios'
 
 export default function LoginPage(props) {
   const dispatch = useDispatch()
@@ -32,23 +32,15 @@ export default function LoginPage(props) {
 
     dispatch(loginUser(body))
       .then(response => {
-        console.log('response는 어떤 모습일까?', response.payload);
-        localStorage.setItem("token", response.payload.token)
-        })
-
-    // 이거 token 잘 가져와짐
-    // const token = localStorage.getItem('token')
-
-      // .catch(error => {
-      //   let error_code = error.response.data.message
-      //   if (error_code === "Invalid ID") {
-      //     alert("잘못된 아이디입니다.")
-      //   } else if (error_code === "Invalid Password") {
-      //     alert("잘못된 패스워드입니다.")
-      //   } else {
-      //     alert("이메일 인증을 진행해주세요.")
-      //   }
-      // })
+        localStorage.setItem("token", response.payload.data.token)
+        localStorage.setItem("expiration", response.payload.data.expiration)
+        localStorage.setItem("nickname", response.payload.data.nickname)
+        localStorage.setItem("role", response.payload.data.role)
+        localStorage.setItem("profileImg", response.payload.data.profileImg)
+        let token = localStorage.getItem("token")
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+        navigate('/')
+      })
   }
   return (
     <div>
@@ -71,9 +63,7 @@ export default function LoginPage(props) {
           navigate("/signup")
         }}>회원가입</button>
       </form>
-      <hr />
-      <p>소셜 로그인 구현할 위치</p>
-      
+
     </div>
   )
 }
