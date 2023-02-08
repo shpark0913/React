@@ -1,19 +1,37 @@
 import React from 'react'
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { loginUser } from '../../_actions/user_action'
+import { loginUser, login_constant } from '../../_actions/user_action'
 import { useNavigate } from 'react-router-dom'
 import logo from '../../assets/글씨_250.png'
 import axios from 'axios'
 
+
 export default function LoginPage(props) {
   const dispatch = useDispatch()
   const navigate = useNavigate()
-
-
   const [Email, setEmail] = useState('')
   const [Password, setPassword] = useState('')
+  const [pwMessage, setPwMessage] = useState('')
 
+  const handleFindPw = (event) => {
+    event.preventDefault()
+    let body = {
+      "email": Email
+    }
+    axios.patch('https://i8a108.p.ssafy.io/api/users/find-password', body)
+      .then(response => {
+        console.log('response', response)
+        setPwMessage('임시 비밀번호가 이메일로 발급되었습니다.')
+      })
+      .catch(error => {
+        console.log(error)
+        if (error.message === 'Request failed with status code 404') {
+          setPwMessage('회원 정보가 없습니다.')
+        }
+      })
+  }
+  
   const onEmailHandler = event => {
     setEmail(event.target.value)
   }
@@ -38,8 +56,13 @@ export default function LoginPage(props) {
         localStorage.setItem("role", response.payload.data.role)
         localStorage.setItem("profileImg", response.payload.data.profileImg)
         let token = localStorage.getItem("token")
+        dispatch(login_constant('wow')).then(response => console.log(response))
         axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
-        navigate('/')
+        // navigate('/')
+      })
+      .catch(error => {
+        console.log(error)
+        setPwMessage('Email이나 Password를 확인하세요.')
       })
   }
   return (
@@ -53,15 +76,14 @@ export default function LoginPage(props) {
         <input type="email" value={Email} onChange = {onEmailHandler} />
         <label>Password</label>
         <input type="password" value={Password} onChange = {onPasswordHandler} />
-        <input type="checkbox" name="로그인 유지"/>
-        <label htmlFor="로그인 유지">로그인 유지</label>
-        <a href="https://i8a108.p.ssafy.io/api/users/find-pwd">비밀번호 찾기</a>
         <br />
         <button>로그인</button>
         <button onClick={event => {
           event.preventDefault()
           navigate("/signup")
         }}>회원가입</button>
+        <button onClick={handleFindPw}>비밀번호 재설정</button>
+        { pwMessage }
       </form>
 
     </div>

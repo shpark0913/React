@@ -5,7 +5,8 @@ import {
     CHECK_EMAIL,
     CHECK_EMAIL_CODE,
     CHECK_NICKNAME,
-    SEND_CODE
+    SEND_CODE,
+    LOGIN_CONSTANT
 } from './types'
 
 
@@ -85,6 +86,17 @@ export function send_code(dataTosubmit) {
 
     return {
         type: SEND_CODE,
+        payload: request
+    }
+}
+
+
+export function login_constant(dataTosubmit) {
+    
+    const request = dataTosubmit
+
+    return {
+        type: LOGIN_CONSTANT,
         payload: request
     }
 }
