@@ -6,7 +6,7 @@ import { Provider } from 'react-redux';
 import { applyMiddleware, createStore } from 'redux';
 import promiseMiddleware from 'redux-promise'
 import ReduxThunk from 'redux-thunk'
-import Reducer from './_reducers'
+import rootReducer from './_reducers'
 
 import { Route, createBrowserRouter, createRoutesFromElements, RouterProvider } from "react-router-dom";
 
@@ -34,7 +34,7 @@ import CurationsMain from "./routes/CurationsPage/CurationsMain";
 import { loader as curationListLoader } from "./routes/CurationsPage/CurationsMain";
 import CurationsOnAir from "./routes/CurationsPage/CurationsOnAir"
 import CurationsUpcoming from "./routes/CurationsPage/CurationsUpcoming";
-import CurationsFinish from "./routes/CurationsPage/CurationsFinish";
+import CurationsEnd from "./routes/CurationsPage/CurationsEnd";
 import CurationsDetail from "./routes/CurationsPage/CurationsDetail";
 import CurationsRegister from "./routes/CurationsPage/CurationsRegister";
 
@@ -106,7 +106,7 @@ const router = createBrowserRouter(
           <Route path="curations/on_air/CurationsOpenVidu" element={<CurationsOpenVidu/>}/>
 
           <Route path="curations/upcoming" element={ <CurationsUpcoming /> } />
-          <Route path="curations/finish" element={ <CurationsFinish /> } />
+          <Route path="curations/end" element={ <CurationsEnd /> } />
           <Route path="curations/detail" element={ <CurationsDetail /> } />
           <Route path="curations/register" element={ <CurationsRegister /> } />
 
@@ -176,17 +176,17 @@ const router = createBrowserRouter(
     </Route>
   )
 )
-
+let store = createStoreWithMiddleware(rootReducer,
+  window.__REDUX_DEVTOOLS_EXTIONSION__ &&
+  window.__REDUX_DEVTOOLS_EXTIONSION__()
+  )
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <Provider
-      store = {createStoreWithMiddleware(Reducer,
-        window.__REDUX_DEVTOOLS_EXTIONSION__ &&
-        window.__REDUX_DEVTOOLS_EXTIONSION__()
-        )}
+      store = {store}
     >
       <RouterProvider router={router} />
     </Provider>
@@ -197,3 +197,4 @@ root.render(
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
+export default store 

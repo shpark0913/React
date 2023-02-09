@@ -6,16 +6,16 @@ import {
     CHECK_EMAIL_CODE,
     CHECK_NICKNAME,
     SEND_CODE,
-    LOGIN_CONSTANT
+    LOGIN_CODE,
+    LOGOUT_CODE
 } from './types'
 
 
 export function loginUser(dataTosubmit) {
-
+    console.log("dataTosubmit", dataTosubmit)
     const request = axios.post('https://i8a108.p.ssafy.io/api/auth/login', dataTosubmit)
         .then(response => response)
         .catch(error => console.log('error', error))
-    console.log(request);
 
     return {
         type: LOGIN_USER,
@@ -24,6 +24,19 @@ export function loginUser(dataTosubmit) {
 
 }
 
+export function loginCode() {
+    return {
+        type: LOGIN_CODE,
+        payload: ""
+    }
+}
+
+export function logoutCode() {
+    return {
+        type: LOGOUT_CODE,
+        payload: ""
+    }
+}
 
 export function signUpUser(dataTosubmit) {
 
@@ -86,17 +99,6 @@ export function send_code(dataTosubmit) {
 
     return {
         type: SEND_CODE,
-        payload: request
-    }
-}
-
-
-export function login_constant(dataTosubmit) {
-    
-    const request = dataTosubmit
-
-    return {
-        type: LOGIN_CONSTANT,
         payload: request
     }
 }

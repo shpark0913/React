@@ -1,11 +1,11 @@
 import React from 'react'
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { loginUser, login_constant } from '../../_actions/user_action'
+import { loginUser, loginCode } from '../../_actions/user_action'
 import { useNavigate } from 'react-router-dom'
 import logo from '../../assets/글씨_250.png'
 import axios from 'axios'
-
+import { useSelector } from 'react-redux'
 
 export default function LoginPage(props) {
   const dispatch = useDispatch()
@@ -13,6 +13,11 @@ export default function LoginPage(props) {
   const [Email, setEmail] = useState('')
   const [Password, setPassword] = useState('')
   const [pwMessage, setPwMessage] = useState('')
+  const userExample = useSelector(state => state.user)
+  console.log("useSelector 해서 state 가져온 것", userExample)
+  const loginWonder = useSelector(state => state.user.login_status)
+  console.log("로그인 했나요?", loginWonder)
+  console.log("겁나 빡세네", loginWonder === true)
 
   const handleFindPw = (event) => {
     event.preventDefault()
@@ -56,14 +61,14 @@ export default function LoginPage(props) {
         localStorage.setItem("role", response.payload.data.role)
         localStorage.setItem("profileImg", response.payload.data.profileImg)
         let token = localStorage.getItem("token")
-        dispatch(login_constant('wow')).then(response => console.log(response))
         axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
-        // navigate('/')
+        navigate('/')
       })
       .catch(error => {
         console.log(error)
         setPwMessage('Email이나 Password를 확인하세요.')
       })
+    dispatch(loginCode())
   }
   return (
     <div>
