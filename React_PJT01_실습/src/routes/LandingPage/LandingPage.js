@@ -1,16 +1,16 @@
 import React from 'react';
 import {Link, useLoaderData} from 'react-router-dom';
-import customAxios from "../../_actions/customAxios";
+import axiosCustom from "../../_actions/axiosCustom";
 import { logoutCode } from '../../_actions/user_action';
 
 import ArtItem from "../../components/commons/artItem";
 import { useDispatch, useSelector } from 'react-redux';
 
 export async function loader () {
-  const arts = await customAxios().get('/arts' )
-    .then(response=>response)
+  const arts = await axiosCustom.get('/arts/all' )
+    .then(response=>response.data)
     .catch(error=>console.log(error))
-  return { arts };
+  return {arts};
 }
 
 function LandingPage() {
@@ -18,17 +18,23 @@ function LandingPage() {
   const loginWonder = useSelector(state => state.user.login_status)
   const handleLogOut = event => {
     event.preventDefault()
+    localStorage.removeItem("token")
+    localStorage.removeItem("expiration")
+    localStorage.removeItem("nickname")
+    localStorage.removeItem("profileImg")
+    localStorage.removeItem("role")
     dispatch(logoutCode())
     console.log("로그인 했나요?", loginWonder)
   }
   const {arts} = useLoaderData();
+  console.log(arts)
 
   return (
     <div>
       <button onClick={handleLogOut}>로그아웃</button>
       <div>
         <h1><Link className='link' to="curations">큐레이션🍌</Link></h1>
-        <p>현재 진행중인 큐레이션 -> 진행 예정 큐레이션 보여주기</p>
+        <p>현재 진행중인 큐레이션 {`->`} 진행 예정 큐레이션 보여주기</p>
       </div>
 
       <div>
@@ -39,16 +45,17 @@ function LandingPage() {
       <div >
         <h1><Link className='link' to="arts">트렌딩🔥</Link></h1>
         <div className="grid__main-components">
-          {arts.data.map((art) =>
-            <div key={`art_item_${art.art_seq}`}>
+          {arts.map((art) =>
+            <div key={`art-item_${art.artSeq}`}>
               <ArtItem
                 nickname={art.nickname}
-                profile_img={art.profile_img}
-                art_name={art.art_name}
-                art_seq={art.art_seq}
-                art_hit={art.art_hit}
-                art_like_count={art.art_like_count}
-                art_thumbnail={art.art_thumbnail}
+                profileImg={art.profileImg}
+                userSeq={art.userSeq}
+                artThumbnail={art.artThumbnail}
+                artName={art.artName}
+                artSeq={art.artSeq}
+                artHit={art.artHit}
+                artLikeCount={art.artLikeCount}
               />
             </div>
           )}

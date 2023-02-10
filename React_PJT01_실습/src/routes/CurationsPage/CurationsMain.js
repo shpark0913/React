@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 import { Link, useLoaderData } from 'react-router-dom';
-import customAxios from '../../_actions/customAxios'
+import axiosCustom from '../../_actions/axiosCustom'
 
 import {TabMenu, TabContent} from "../../components/commons/tabMenu";
 
 export function loader() {
-  const curationsList = customAxios().get(`curations/main`)
+  const curationsList = axiosCustom.get(`curations/main`)
     .then(response=>response.data)
     .catch(error=>console.log(error))
   return curationsList;
@@ -88,14 +88,6 @@ function CurationsMain() {
           a.curationStartTime[4] - b.curationStartTime[4] ||
           a.curationStartTime[5] - b.curationStartTime[5] )},
   ];
-
-  const handlerUpcommingIndex = (index) => {
-
-  };
-  const handlerEndIndex = (index) => {
-    setEndIndex(index);
-  };
-
 
   return (
     <div>
