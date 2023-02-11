@@ -14,13 +14,14 @@ function Upload(props) {
 
         <div className="category">
           <div>카테고리</div>
+          <input type="file" accept='image/*' name="" id="" />
           <label><input type="checkbox" name="category" value="illustrations" />일러스트레이션</label>
-          <label><input type="checkbox" name="category" value="digital_arts" />디지털 아트</label>
-          <label><input type="checkbox" name="category" value="crafts" />공예</label>
           <label><input type="checkbox" name="category" value="characters" />캐릭터디자인</label>
-          <label><input type="checkbox" name="category" value="fine arts" />파인 아트</label>
-          <label><input type="checkbox" name="category" value="photography" />포토그래피</label>
+          <label><input type="checkbox" name="category" value="digital_arts" />디지털 아트</label>
           <label><input type="checkbox" name="category" value="typography" />타이포그래피</label>
+          <label><input type="checkbox" name="category" value="photography" />포토그래피</label>
+          <label><input type="checkbox" name="category" value="fine arts" />파인 아트</label>
+          <label><input type="checkbox" name="category" value="crafts" />공예</label>
         </div>
 
         <label htmlFor="description">작품 설명</label>

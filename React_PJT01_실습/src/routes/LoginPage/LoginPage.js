@@ -5,7 +5,7 @@ import { loginUser, loginCode } from '../../_actions/user_action'
 import { useNavigate } from 'react-router-dom'
 import logo from '../../assets/글씨_250.png'
 import axios from 'axios'
-import { useSelector } from 'react-redux'
+// import { useSelector } from 'react-redux'
 
 export default function LoginPage(props) {
   const dispatch = useDispatch()
@@ -13,11 +13,11 @@ export default function LoginPage(props) {
   const [Email, setEmail] = useState('')
   const [Password, setPassword] = useState('')
   const [pwMessage, setPwMessage] = useState('')
-  const userExample = useSelector(state => state.user)
-  console.log("useSelector 해서 state 가져온 것", userExample)
-  const loginWonder = useSelector(state => state.user.login_status)
-  console.log("로그인 했나요?", loginWonder)
-  console.log("겁나 빡세네", loginWonder === true)
+  // const userExample = useSelector(state => state.user)
+  // console.log("useSelector 해서 state 가져온 것", userExample)
+  // const loginWonder = useSelector(state => state.user.login_status)
+  // console.log("로그인 했나요?", loginWonder)
+  // console.log("겁나 빡세네", loginWonder === true)
 
   const handleFindPw = (event) => {
     event.preventDefault()
@@ -60,6 +60,7 @@ export default function LoginPage(props) {
         localStorage.setItem("nickname", response.payload.data.nickname)
         localStorage.setItem("role", response.payload.data.role)
         localStorage.setItem("profileImg", response.payload.data.profileImg)
+        localStorage.setItem("userSeq", response.payload.data.userSeq)
         let token = localStorage.getItem("token")
         axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
         navigate('/')

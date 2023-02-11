@@ -1,6 +1,6 @@
 import React from 'react'
-import {Link, useLoaderData} from 'react-router-dom'
-import axiosAuth from '../../_actions/axiosAuth';
+import {Link, useLoaderData, redirect } from 'react-router-dom'
+import { axiosAuth } from '../../_actions/axiosAuth';
 import ProfileImg from "../../components/commons/ProfileImg";
 import { getArtImage } from "../../components/commons/imageModule";
 import {YellowBtn , LikeBtn} from "../../components/commons/buttons";
@@ -13,14 +13,17 @@ export async function loader ({params}) {
   
   const artData = await axiosAuth.get(`arts/detail/${artSeq}`)
   .then(response => response.data)
-  .catch(error => console.log(error))
+  .catch(error => error.response.status)
   
   console.log(artData);
-  if (!artData) {
+  if (artData === 404) {
     throw new Response("", {
       status: 404,
-      statusText: "Not Found",
+      statusText: "작품을 찾을 수 없습니다!",
     });
+  }
+  else if (artData === 401) {
+    return redirect('/login');
   }
   return artData;
 }
@@ -74,7 +77,9 @@ function ArtsDetail() {
             <div className="art-detail__btns">
               {/* 좋아요 누른 버튼이랑 안누른 버튼 */}
               <LikeBtn isLike={true} />
-              <a href={`https://i8a108.p.ssafy.io/api/arts/download/${artData.artSeq}`}><YellowBtn>다운로드</YellowBtn></a>
+              <form action={`https://i8a108.p.ssafy.io/api/arts/download/${artData.artSeq}`} method="get">
+                <YellowBtn type="submit">다운로드</YellowBtn>
+              </form>
             </div>
           </div>
         </div>
