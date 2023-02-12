@@ -53,6 +53,7 @@ import { loader as myPageLoader } from "./routes/MyPage/Layout"
 // 작품탭
 // import ArtsRoot from "./routes/MyPage/ArtsRoot"
 import ArtsMyPage from "./routes/MyPage/ArtsMyPage";
+import { loader as ArtsMyPageLoader } from "./routes/MyPage/ArtsMyPage";
 // import ArtsFavorite from "./routes/MyPage/ArtsFavorite";
 // import ArtsIndex from "./routes/MyPage/ArtsIndex";
 // import ArtsMyCollections from "./routes/MyPage/ArtsMyCollections";
@@ -72,8 +73,10 @@ import Commissions from "./routes/MyPage/Commissions"
 import MyPageCommissionsDetail from "./routes/MyPage/CommissionsDetail"
 // 모달(프로필 수정, 작품 업로드, 대표작품 설정)
 import EditProfile from "./routes/MyPage/EditProfile";
+
 // 작품 업로드
 import Upload from "./routes/MyPage/Upload"
+import { action as UploadLoader } from "./routes/MyPage/Upload"
 // 대표작품 설정
 import SetMasterpiece from "./routes/MyPage/SetMasterpiece"
 import CommissionsRegister from "./routes/CommissionsPage/CommissionsRegister";
@@ -129,6 +132,7 @@ const router = createBrowserRouter(
             <Route
               index
               element={<ArtsMyPage />}
+              loader={ArtsMyPageLoader}
             >
               {/*<Route index element={ <ArtsIndex /> }>*/}
               {/*  /!* 대표작품 설정 페이지 들어갈거임 *!/*/}
@@ -170,9 +174,9 @@ const router = createBrowserRouter(
             <Route path="commissions" element={ <Commissions /> } />
             <Route path="commissions/detail" element={ <MyPageCommissionsDetail /> } />
 
-            <Route path="arts/edit_profile" element={ <EditProfile /> }></Route>
-            <Route path="arts/upload" element={ <Upload /> }></Route>
-            <Route path="arts/set_masterpiece" element={ <SetMasterpiece /> }></Route>
+            <Route path="edit_profile" element={ <EditProfile /> }></Route>
+            <Route path="upload" element={ <Upload /> } action={UploadLoader}></Route>
+            <Route path="set_masterpiece" element={ <SetMasterpiece /> }></Route>
 
           </Route>
         </Route>
