@@ -1,20 +1,25 @@
 import React from 'react'
-import {Link, useLoaderData, redirect } from 'react-router-dom'
+import {Link, useLoaderData, redirect, Form } from 'react-router-dom'
+import { axiosReissue } from '../../_actions/axiosAuth';
 import { axiosAuth } from '../../_actions/axiosAuth';
 import ProfileImg from "../../components/commons/ProfileImg";
 import { getArtImage } from "../../components/commons/imageModule";
-import {YellowBtn , LikeBtn} from "../../components/commons/buttons";
+import {YellowBtn, RedBtn, LikeBtn} from "../../components/commons/buttons";
 import {Category} from "../../components/commons/category";
 import './ArtsDetail.css'
-
+import { useState } from 'react';
 
 export async function loader ({params}) {
   let artSeq = params.art_seq;
   
   const artData = await axiosAuth.get(`arts/detail/${artSeq}`)
-  .then(response => response.data)
-  .catch(error => error.response.status)
+    .then(response => response.data)
+    .catch(error => error.response.status)
   
+  const likeList = await axiosAuth.get(`arts/${localStorage.getItem("userSeq")}/like`)
+    .then(response=> response.data)
+    .catch(() => null)
+
   console.log(artData);
   if (artData === 404) {
     throw new Response("", {
@@ -25,14 +30,45 @@ export async function loader ({params}) {
   else if (artData === 401) {
     return redirect('/login');
   }
-  return artData;
+  return [artData, likeList];
+}
+
+export async function action ({request, params}) {
+  console.log(request);
+  const artSeq = +params.art_seq;
+  if (request.method === "DELETE") {
+    const body = {
+      "seq" : artSeq
+    }
+    console.log(body)
+    await axiosAuth.delete('arts/delete', {
+      data: {
+        seq : artSeq
+      }
+    })
+      .then(response => console.log(response))
+      .catch(error => console.log(error))
+
+  }
+  else if (request.method === "PUT") {
+    console.log("put")
+  }
+
+  return redirect('/')
 }
 
 
 function ArtsDetail() {
-  const artData = useLoaderData();
-  // console.log('artData', artData);
-  // let artData = artData.artSeq
+
+  const [artData, likeList] = useLoaderData();
+
+  axiosReissue();
+
+  console.log(likeList)
+  let wonderValue = likeList?.find((like) => like.artSeq === artData.artSeq) || false;
+  console.log(wonderValue);
+  
+  const [wonder, setWonder] = useState(wonderValue)
   return (
     <div>
       <div className="art-detail__container grid__detail-page">
@@ -50,10 +86,20 @@ function ArtsDetail() {
               <ProfileImg height="30px" width="30px" url={artData.profileImg} userSeq={artData.userSeq} />
               <div>{artData.nickname} <span className="jakka">작가</span></div>
             </Link>
+
             <div className="upload_date">{`${artData.artRegDate[0]}.${(artData.artRegDate[1]+'').padStart(2, "0")}.${(artData.artRegDate[2]+'').padStart(2, "0")}.`}</div>
+            {artData.userSeq === +localStorage.getItem('userSeq') ?
+              <div className="art-detail__manage">
+                <Form method="delete"><RedBtn type="submit">삭제하기</RedBtn></Form>
+                <Form method="put">수정하기</Form>
+              </div> : null
+            }
             <div className="arts_description">
               {artData.artDescription}
             </div>
+
+
+
             <Category className="art-detail__category">
               {artData.artCategory.artCategoryName}
             </Category>
@@ -76,7 +122,41 @@ function ArtsDetail() {
             </div>
             <div className="art-detail__btns">
               {/* 좋아요 누른 버튼이랑 안누른 버튼 */}
-              <LikeBtn isLike={true} />
+              
+
+
+              <form onSubmit={(event) => {
+                event.preventDefault()
+
+                if (wonder) {
+                  const userSeq = localStorage.getItem("userSeq")
+                  let body = { "userSeq": userSeq, "artSeq": artData.artSeq }
+                  axiosReissue()
+                  axiosAuth.delete(`arts/like`, {
+                    data: body
+                  })
+                  .then(response => console.log('싫어요 response', response))
+                  .catch(error => {
+                    console.log("이게 왜 에러지", error)
+                  })
+                  
+
+                } else if (!wonder) {
+                  const userSeq = localStorage.getItem("userSeq")
+                  let body = { "userSeq": userSeq, "artSeq": artData.artSeq }
+                  axiosReissue()
+                  axiosAuth.post(`arts/like`, body)
+                  .then(response => console.log('좋아요 response', response))
+                }
+                setWonder(prev=>!prev)
+
+              }}>
+                <LikeBtn isLike={wonder} />
+              </form>
+              
+
+
+
               <form action={`https://i8a108.p.ssafy.io/api/arts/download/${artData.artSeq}`} method="get">
                 <YellowBtn type="submit">다운로드</YellowBtn>
               </form>

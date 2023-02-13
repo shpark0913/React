@@ -27,8 +27,11 @@ import { loader as LandingLoader } from './routes/LandingPage/LandingPage'
 
 // 작품 페이지
 import ArtsMain from "./routes/ArtsPage/ArtsMain";
+import { loader as ArtsLoader } from "./routes/ArtsPage/ArtsMain";
+import ArtsMainCategory from './routes/ArtsPage/ArtsMainCategory';
+import { loader as ArtsMainCategoryLoader } from './routes/ArtsPage/ArtsMainCategory';
 import ArtsDetail from "./routes/ArtsPage/ArtsDetail";
-import { loader as ArtsDetailLoader } from "./routes/ArtsPage/ArtsDetail";
+import { loader as ArtsDetailLoader, action as ArtsDetailAction } from "./routes/ArtsPage/ArtsDetail";
 
 // 큐레이션 페이지
 import CurationsMain from "./routes/CurationsPage/CurationsMain";
@@ -52,17 +55,18 @@ import { loader as myPageLoader } from "./routes/MyPage/Layout"
 
 // 작품탭
 // import ArtsRoot from "./routes/MyPage/ArtsRoot"
-import ArtsMyPage from "./routes/MyPage/ArtsMyPage";
-import { loader as ArtsMyPageLoader } from "./routes/MyPage/ArtsMyPage";
+import ArtsRoot from "./routes/MyPage/ArtsRoot";
+import { loader as ArtsMyPageLoader } from "./routes/MyPage/ArtsRoot";
 // import ArtsFavorite from "./routes/MyPage/ArtsFavorite";
 // import ArtsIndex from "./routes/MyPage/ArtsIndex";
 // import ArtsMyCollections from "./routes/MyPage/ArtsMyCollections";
 // 공지사항탭
 import NoticesRoot from "./routes/MyPage/NoticesRoot";
-import NoticesMine from "./routes/MyPage/NoticesMine";
-import NoticesFollowing from "./routes/MyPage/NoticesFollowing";
+import { loader as NoticesLoader, action as NoticesAction } from "./routes/MyPage/NoticesRoot";
+// import NoticesMine from "./routes/MyPage/NoticesMine";
+// import NoticesFollowing from "./routes/MyPage/NoticesFollowing";
 import NoticesDetail, {loader as noticeLoader} from "./routes/MyPage/NoticesDetail"
-import { getNotices } from "./notices"
+// import { getNotices } from "./notices"
 // 큐레이션탭
 import CurationsRoot from "./routes/MyPage/CurationsRoot";
 import CurationsMine from "./routes/MyPage/CurationsMine";
@@ -103,8 +107,9 @@ const router = createBrowserRouter(
           <Route index element={ <LandingPage /> } loader={LandingLoader} errorElement={ <Error /> } />
 
           {/* 작품 페이지 */}
-          <Route path="arts" element={ <ArtsMain /> } />
-          <Route path=":nickname/:art_seq" element={ <ArtsDetail /> } loader={ArtsDetailLoader} />
+          <Route path="arts" element={ <ArtsMain /> } loader={ArtsLoader} />
+            <Route path="arts/:category_seq" element={ <ArtsMainCategory />} loader={ArtsMainCategoryLoader} />
+          <Route path=":nickname/:art_seq" element={ <ArtsDetail /> } loader={ArtsDetailLoader} action={ArtsDetailAction} />
 
           {/* 큐레이션 페이지 */}
           <Route path="curations" element={ <CurationsMain /> } loader={curationListLoader}/>
@@ -131,7 +136,7 @@ const router = createBrowserRouter(
 
             <Route
               index
-              element={<ArtsMyPage />}
+              element={<ArtsRoot />}
               loader={ArtsMyPageLoader}
             >
               {/*<Route index element={ <ArtsIndex /> }>*/}
@@ -144,16 +149,18 @@ const router = createBrowserRouter(
             <Route
               path="notices"
               element={ <NoticesRoot /> }
+              loader={ NoticesLoader }
+              action={ NoticesAction }
             >
-              <Route
-                path="mine"
-                element={ <NoticesMine /> }
-                loader={getNotices}/>
-              <Route
-                path="following"
-                element={ <NoticesFollowing /> }
-                loader={getNotices}
-              />
+              {/*<Route*/}
+              {/*  path="mine"*/}
+              {/*  element={ <NoticesMine /> }*/}
+              {/*  loader={getNotices}/>*/}
+              {/*<Route*/}
+              {/*  path="following"*/}
+              {/*  element={ <NoticesFollowing /> }*/}
+              {/*  loader={getNotices}*/}
+              {/*/>*/}
               <Route
                 path=":notice_id"
                 element={<NoticesDetail/>}
