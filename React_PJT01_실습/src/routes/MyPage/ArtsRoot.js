@@ -1,26 +1,30 @@
 import React, { useState } from 'react';
-import { useLoaderData, Link } from "react-router-dom";
+import { useLoaderData, Link, redirect } from "react-router-dom";
 import { axiosAuth, axiosReissue } from "../../_actions/axiosAuth";
 import { TabMenu, TabContent } from "../../components/commons/TabMenuComponent";
-import ArtItemMyPage from "../../components/commons/ArtItemMyPage";
+import ArtItemMyPage from "../../components/MyPage/ArtItemMyPage";
 import {YellowBtn} from "../../components/commons/buttons";
 
 export async function loader ({params}) {
   const userSeq = params.nickname_user_seq.split('@')[1];
-
   axiosReissue();
-  const userArts = await axiosAuth(`arts/${userSeq}`)
+
+
+  const userArts = await axiosAuth(`arts`)
     .then(response => response.data)
-    .catch(() => null)
+    .catch((error) => error.response.status === 401 ? error : null )
   const userLikes = await axiosAuth(`arts/${userSeq}/like`)
     .then(response => response.data)
-    .catch(() => null)
+    .catch((error) => error.response.status === 401 ? error : null )
   const userMasterpiece = await axiosAuth(`arts/${userSeq}/masterpiece`)
     .then(response => response.data)
-    .catch(() => null)
+    .catch((error) => error.response.status === 401 ? error : null )
   console.log(userArts);
   console.log(userLikes);
   console.log(userMasterpiece);
+  if (userArts?.response?.status === 401 || userLikes?.response?.status === 401 || userMasterpiece?.response?.status === 401) {
+    return redirect("/login")
+  }
   return [userArts, userLikes, userMasterpiece]
 }
 
