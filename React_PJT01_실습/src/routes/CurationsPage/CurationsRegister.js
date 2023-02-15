@@ -3,20 +3,21 @@ import { useNavigate, Form } from "react-router-dom";
 import { axiosAuth } from '../../_actions/axiosAuth';
 // import axiosCustom from '../../_actions/axiosCustom';
 import { axiosReissue } from '../../_actions/axiosAuth';
-import promise from 'redux-promise';
+
+
 function CurationsRegister(props) {
   let userSeq = localStorage.getItem("userSeq")
   
   
-  
   axiosReissue()
-  
-  const myArts = axiosAuth.get(`arts/${userSeq}`)
-    .then(response => response)
-    .then(response => promise.response)
-    .catch(error => console.log(error));
+  async function getAllArts() {
+  const myArts = await axiosAuth.get(`arts/${userSeq}`)
+  console.log('나의 작품 리스트', myArts.data)
 
-  console.log("내 작품들 -> ", myArts)
+  // myArts.data를 return해도 계속 promise 형태
+  }
+
+  getAllArts()
 
 
   const masterpieces = []
